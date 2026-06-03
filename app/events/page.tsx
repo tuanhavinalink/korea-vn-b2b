@@ -1,3 +1,4 @@
+﻿export const dynamic = 'force-dynamic'
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentProfile } from '@/lib/auth'
 import JoinMeetingButton from '@/components/JoinMeetingButton'
@@ -153,3 +154,4 @@ function EventCard({ event, interested, interestId, memberId, isPast }: {
     </div>
   )
 }
+

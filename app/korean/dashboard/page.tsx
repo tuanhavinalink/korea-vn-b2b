@@ -1,3 +1,4 @@
+﻿export const dynamic = 'force-dynamic'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { getCurrentProfile } from '@/lib/auth'
@@ -153,3 +154,4 @@ export default async function KoreanDashboard() {
     </div>
   )
 }
+
