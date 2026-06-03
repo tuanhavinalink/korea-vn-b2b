@@ -1,3 +1,4 @@
+﻿export const dynamic = 'force-dynamic'
 import Link from 'next/link'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
@@ -175,3 +176,4 @@ function CompanyCard({ company }: { company: KoreanCompany }) {
     </Link>
   )
 }
+

@@ -1,3 +1,4 @@
+﻿export const dynamic = 'force-dynamic'
 import { createAdminClient } from '@/lib/supabase/server'
 import { getCurrentProfile } from '@/lib/auth'
 import { redirect } from 'next/navigation'
@@ -118,3 +119,4 @@ export default async function AdminMembersPage() {
     </div>
   )
 }
+
