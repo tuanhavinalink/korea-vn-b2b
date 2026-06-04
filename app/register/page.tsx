@@ -81,8 +81,9 @@ export default function RegisterPage() {
       return
     }
 
-    setSuccess(true)
-    setLoading(false)
+    // 3. Auto sign in after registration
+    await supabase.auth.signInWithPassword({ email: data.email, password: data.password })
+    window.location.href = '/member/dashboard'
   }
 
   if (success) {
