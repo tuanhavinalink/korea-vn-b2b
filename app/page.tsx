@@ -1,19 +1,25 @@
-﻿export const dynamic = 'force-dynamic'
-import Link from 'next/link'
-import Image from 'next/image'
+export const dynamic = 'force-dynamic'
 import { createClient } from '@/lib/supabase/server'
-import { KoreanCompany } from '@/types'
-import { Building2, Calendar, Star, ChevronRight } from 'lucide-react'
+import HomeClient from '@/components/HomeClient'
+import Link from 'next/link'
+import { Calendar, ChevronRight, Star } from 'lucide-react'
 
-export const revalidate = 60
-
-async function getCompanies(): Promise<KoreanCompany[]> {
+async function getCompanies() {
   const supabase = createClient()
   const { data } = await supabase
     .from('korean_companies')
     .select('*')
     .eq('is_active', true)
     .order('name')
+  return data ?? []
+}
+
+async function getProducts() {
+  const supabase = createClient()
+  const { data } = await supabase
+    .from('products')
+    .select('*')
+    .order('created_at')
   return data ?? []
 }
 
@@ -30,7 +36,9 @@ async function getUpcomingEvents() {
 }
 
 export default async function HomePage() {
-  const [companies, events] = await Promise.all([getCompanies(), getUpcomingEvents()])
+  const [companies, products, events] = await Promise.all([
+    getCompanies(), getProducts(), getUpcomingEvents()
+  ])
 
   return (
     <>
@@ -102,28 +110,8 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Company Grid */}
-      <section id="companies" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="flex items-center justify-between mb-10">
-          <div>
-            <h2 className="section-title">Korean Partner Companies</h2>
-            <p className="text-gray-500 mt-2">Click on a company to view their products, catalog and introduction video</p>
-          </div>
-        </div>
-
-        {companies.length === 0 ? (
-          <div className="text-center py-20 text-gray-400">
-            <Building2 size={48} className="mx-auto mb-4 opacity-30" />
-            <p>No companies listed yet. Check back soon.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {companies.map((company) => (
-              <CompanyCard key={company.id} company={company} />
-            ))}
-          </div>
-        )}
-      </section>
+      {/* Companies + Products (client pagination) */}
+      <HomeClient companies={companies} products={products} />
 
       {/* CTA */}
       <section className="bg-korean-blue text-white py-16">
@@ -142,38 +130,3 @@ export default async function HomePage() {
     </>
   )
 }
-
-function CompanyCard({ company }: { company: KoreanCompany }) {
-  return (
-    <Link href={`/company/${company.id}`}
-      className="card hover:shadow-md transition-all hover:-translate-y-1 group">
-      <div className="p-6">
-        {/* Logo */}
-        <div className="h-20 flex items-center justify-center bg-gray-50 rounded-lg mb-4 overflow-hidden">
-          {company.logo_url ? (
-            <img src={company.logo_url} alt={company.name}
-              className="max-h-16 max-w-full object-contain" />
-          ) : (
-            <div className="text-3xl font-bold text-gray-200">
-              {company.name.slice(0, 2).toUpperCase()}
-            </div>
-          )}
-        </div>
-        {/* Info */}
-        <h3 className="font-bold text-lg text-gray-900 group-hover:text-korean-red transition-colors mb-1">
-          {company.name}
-        </h3>
-        <span className="inline-block text-xs bg-korean-blue/10 text-korean-blue font-medium px-2 py-1 rounded-full mb-3">
-          {company.business_sector}
-        </span>
-        {company.description && (
-          <p className="text-sm text-gray-500 line-clamp-2">{company.description}</p>
-        )}
-        <div className="mt-4 flex items-center text-korean-red text-sm font-medium">
-          View Showroom <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform" />
-        </div>
-      </div>
-    </Link>
-  )
-}
-
