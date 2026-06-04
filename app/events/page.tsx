@@ -136,17 +136,28 @@ function EventCard({ event, interested, interestId, memberId, isPast }: {
                 interestId={interestId}
               />
             )}
-            {event.zoom_link && !isPast && (
-              <a href={event.zoom_link} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2.5 bg-[#2D8CFF] text-white rounded-lg text-sm font-semibold hover:bg-blue-600 transition-colors">
-                <Video size={16} /> Open ZOOM
-              </a>
-            )}
-            {event.zalo_link && (
-              <a href={event.zalo_link} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2.5 bg-[#0068FF] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity">
-                <MessageCircle size={16} /> Join Zalo Group
-              </a>
+            {!isPast && (event.zoom_link || event.zalo_link) && (
+              memberId ? (
+                <>
+                  {event.zoom_link && (
+                    <a href={event.zoom_link} target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-4 py-2.5 bg-[#2D8CFF] text-white rounded-lg text-sm font-semibold hover:bg-blue-600 transition-colors">
+                      <Video size={16} /> Open ZOOM
+                    </a>
+                  )}
+                  {event.zalo_link && (
+                    <a href={event.zalo_link} target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-4 py-2.5 bg-[#0068FF] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity">
+                      <MessageCircle size={16} /> Join Zalo Group
+                    </a>
+                  )}
+                </>
+              ) : (
+                <a href="/register"
+                  className="flex items-center gap-2 px-4 py-2.5 bg-gray-100 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors border border-gray-200">
+                  🔒 Đăng ký để xem link ZOOM / Zalo
+                </a>
+              )
             )}
           </div>
         </div>
