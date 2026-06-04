@@ -42,12 +42,12 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <div className="flex items-center gap-1">
-              <div className="w-3 h-3 rounded-full bg-korean-red" />
-              <div className="w-3 h-3 rounded-full bg-korean-blue" />
+          <Link href="/" className="flex items-center gap-3">
+            <img src="/kasmi-logo.png" alt="Kasmi" className="h-10 w-auto" />
+            <div className="hidden sm:block">
+              <div className="text-xs text-gray-500 leading-tight">A trusted partner for Korean SMEs</div>
+              <div className="text-xs text-gray-500 leading-tight">planning to enter Vietnam</div>
             </div>
-            <span className="font-bold text-lg text-korean-dark">Korea<span className="text-korean-red">VN</span> B2B</span>
           </Link>
 
           {/* Desktop links */}
