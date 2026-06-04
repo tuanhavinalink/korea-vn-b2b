@@ -10,7 +10,14 @@ export default function HomeClient({ companies, products }: { companies: any[], 
   const totalPages = Math.ceil(companies.length / PAGE_SIZE)
   const pageCompanies = companies.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
   const pageCompanyIds = new Set(pageCompanies.map((c: any) => c.id))
-  const pageProducts = products.filter((p: any) => pageCompanyIds.has(p.company_id))
+  // Only 1 product per company (first one)
+  const seenCompanies = new Set<string>()
+  const pageProducts = products.filter((p: any) => {
+    if (!pageCompanyIds.has(p.company_id)) return false
+    if (seenCompanies.has(p.company_id)) return false
+    seenCompanies.add(p.company_id)
+    return true
+  })
 
   return (
     <section id="companies" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
