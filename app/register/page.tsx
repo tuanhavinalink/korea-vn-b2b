@@ -58,21 +58,25 @@ export default function RegisterPage() {
       return
     }
 
-    // 2. Insert VN member profile
-    const { error: profileError } = await supabase.from('vn_members').insert({
-      id: authData.user.id,
-      full_name: data.full_name,
-      company_name: data.company_name || null,
-      position: data.position || null,
-      phone: data.phone || null,
-      email: data.email,
-      website: data.website || null,
-      business_sector: data.business_sector || null,
-      partnership_needs: data.partnership_needs || null,
+    // 2. Insert VN member profile via API (bypasses RLS for new users without session)
+    const res = await fetch('/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: authData.user.id,
+        full_name: data.full_name,
+        company_name: data.company_name || null,
+        position: data.position || null,
+        phone: data.phone || null,
+        email: data.email,
+        website: data.website || null,
+        business_sector: data.business_sector || null,
+        partnership_needs: data.partnership_needs || null,
+      }),
     })
-
-    if (profileError) {
-      setError(profileError.message)
+    const result = await res.json()
+    if (!res.ok) {
+      setError(result.error || 'Failed to save profile')
       setLoading(false)
       return
     }
