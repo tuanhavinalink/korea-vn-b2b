@@ -1,7 +1,8 @@
 'use client'
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import { Calendar, Plus, Trash2, Eye, EyeOff, Users, Video, MessageCircle } from 'lucide-react'
+import { Calendar, Plus, Trash2, Eye, EyeOff, Users, Video, MessageCircle, ChevronDown, ChevronUp } from 'lucide-react'
 
 interface ZoomEvent {
   id: string; title: string; description: string | null; event_date: string;
@@ -12,6 +13,8 @@ export default function AdminEventsPage() {
   const supabase = createClient()
   const [events, setEvents] = useState<ZoomEvent[]>([])
   const [interestCounts, setInterestCounts] = useState<Record<string, number>>({})
+  const [interestedUsers, setInterestedUsers] = useState<Record<string, any[]>>({})
+  const [expandedEvent, setExpandedEvent] = useState<string | null>(null)
   const [showForm, setShowForm] = useState(false)
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({
@@ -23,10 +26,18 @@ export default function AdminEventsPage() {
     const { data } = await supabase.from('zoom_events').select('*').order('event_date', { ascending: false })
     setEvents(data ?? [])
 
-    const { data: interests } = await supabase.from('event_interests').select('event_id')
-    const map: Record<string, number> = {}
-    interests?.forEach((i: any) => { map[i.event_id] = (map[i.event_id] ?? 0) + 1 })
-    setInterestCounts(map)
+    const { data: interests } = await supabase
+      .from('event_interests')
+      .select('event_id, vn_member_id, vn_members(id, full_name, company_name, email, phone)')
+    const countMap: Record<string, number> = {}
+    const usersMap: Record<string, any[]> = {}
+    interests?.forEach((i: any) => {
+      countMap[i.event_id] = (countMap[i.event_id] ?? 0) + 1
+      if (!usersMap[i.event_id]) usersMap[i.event_id] = []
+      if (i.vn_members) usersMap[i.event_id].push(i.vn_members)
+    })
+    setInterestCounts(countMap)
+    setInterestedUsers(usersMap)
   }
 
   useEffect(() => { load() }, [])
@@ -130,9 +141,12 @@ export default function AdminEventsPage() {
                 {event.description && <p className="text-sm text-gray-600 mb-3">{event.description}</p>}
 
                 <div className="flex flex-wrap gap-2 items-center">
-                  <span className="flex items-center gap-1.5 bg-korean-red/10 text-korean-red text-xs px-3 py-1.5 rounded-full font-medium">
+                  <button
+                    onClick={() => setExpandedEvent(expandedEvent === event.id ? null : event.id)}
+                    className="flex items-center gap-1.5 bg-korean-red/10 text-korean-red text-xs px-3 py-1.5 rounded-full font-medium hover:bg-korean-red/20 transition-colors">
                     <Users size={12} /> {interestCounts[event.id] ?? 0} interested
-                  </span>
+                    {expandedEvent === event.id ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                  </button>
                   {event.zoom_link && (
                     <a href={event.zoom_link} target="_blank" rel="noopener noreferrer"
                       className="flex items-center gap-1 text-xs bg-[#2D8CFF] text-white px-3 py-1.5 rounded-full font-medium">
@@ -159,6 +173,31 @@ export default function AdminEventsPage() {
                 </button>
               </div>
             </div>
+
+            {/* Interested users list */}
+            {expandedEvent === event.id && (
+              <div className="mt-4 pt-4 border-t border-gray-100">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Interested Members</p>
+                {(interestedUsers[event.id] ?? []).length === 0 ? (
+                  <p className="text-sm text-gray-400">No one has expressed interest yet.</p>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {(interestedUsers[event.id] ?? []).map((u: any) => (
+                      <Link key={u.id} href={`/admin/members/${u.id}`}
+                        className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-korean-red/5 border border-transparent hover:border-korean-red/20 transition-colors">
+                        <div className="w-8 h-8 bg-korean-blue/10 rounded-full flex items-center justify-center text-korean-blue font-bold text-sm flex-shrink-0">
+                          {u.full_name?.slice(0, 1).toUpperCase()}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-semibold text-sm text-gray-900 truncate">{u.full_name}</p>
+                          <p className="text-xs text-gray-500 truncate">{u.company_name} · {u.email}</p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         ))}
 
