@@ -31,17 +31,15 @@ function LoginForm() {
 
     const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
 
-    if (redirect) {
-      router.push(redirect)
-    } else if (profile?.role === 'admin') {
-      router.push('/admin')
-    } else if (profile?.role === 'korean') {
-      router.push('/korean/dashboard')
-    } else {
-      router.push('/member/dashboard')
-    }
+    const dest = redirect
+      ? redirect
+      : profile?.role === 'admin'
+        ? '/admin'
+        : profile?.role === 'korean'
+          ? '/korean/dashboard'
+          : '/member/dashboard'
 
-    router.refresh()
+    window.location.href = dest
   }
 
   return (
