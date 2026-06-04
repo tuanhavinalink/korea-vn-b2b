@@ -2,6 +2,7 @@
 import { createAdminClient } from '@/lib/supabase/server'
 import { getCurrentProfile } from '@/lib/auth'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import { Users, Phone, Mail, Globe, Heart } from 'lucide-react'
 
 export default async function AdminMembersPage() {
@@ -61,7 +62,7 @@ export default async function AdminMembersPage() {
               {members?.map((m: any) => (
                 <tr key={m.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4">
-                    <p className="font-semibold text-gray-900">{m.full_name}</p>
+                    <Link href={`/admin/members/${m.id}`} className="font-semibold text-gray-900 hover:text-korean-red">{m.full_name}</Link>
                     {m.partnership_needs && (
                       <p className="text-xs text-gray-400 mt-1 max-w-[200px] line-clamp-2">{m.partnership_needs}</p>
                     )}
