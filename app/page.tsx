@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 import { createClient } from '@/lib/supabase/server'
 import HomeClient from '@/components/HomeClient'
+import HeroBanner from '@/components/HeroBanner'
 import Link from 'next/link'
 import { Calendar, ChevronRight, Star } from 'lucide-react'
 
@@ -42,32 +43,8 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-korean-dark via-korean-blue to-korean-dark text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="flex justify-center gap-3 mb-6">
-            <span className="text-5xl">🇰🇷</span>
-            <span className="text-5xl">🤝</span>
-            <span className="text-5xl">🇻🇳</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
-            Korea – Vietnam<br />
-            <span className="text-yellow-400">B2B Trade Platform</span>
-          </h1>
-          <p className="text-lg text-blue-100 mb-8 max-w-2xl mx-auto">
-            Discover leading Korean enterprises, explore their products & catalogs,
-            and connect through live ZOOM business meetings.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/register" className="bg-korean-red hover:bg-red-700 text-white font-semibold px-8 py-3 rounded-lg transition-colors">
-              Register as Vietnamese Buyer
-            </Link>
-            <Link href="#companies" className="bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-3 rounded-lg transition-colors backdrop-blur">
-              Browse Companies
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* Hero Banner Slider */}
+      <HeroBanner />
 
       {/* Stats */}
       <section className="bg-white border-b">
