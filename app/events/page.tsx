@@ -106,14 +106,22 @@ function EventCard({ event, interested, interestId, memberId, isPast }: {
   const date = new Date(event.event_date)
 
   return (
-    <div className="card p-6">
-      <div className="flex flex-col sm:flex-row gap-5 items-start">
-        {/* Date block */}
-        <div className="bg-korean-blue text-white rounded-xl px-5 py-4 text-center min-w-[80px] flex-shrink-0">
-          <div className="text-2xl font-bold">{date.getDate()}</div>
-          <div className="text-xs uppercase tracking-wider">{date.toLocaleDateString('en-US', { month: 'short' })}</div>
-          <div className="text-xs opacity-75">{date.getFullYear()}</div>
+    <div className="card overflow-hidden">
+      {/* Event image banner */}
+      {event.image_url && (
+        <div className="w-full h-48 overflow-hidden">
+          <img src={event.image_url} alt={event.title} className="w-full h-full object-cover" />
         </div>
+      )}
+      <div className="flex flex-col sm:flex-row gap-5 items-start p-6">
+        {/* Date block (show only if no image) */}
+        {!event.image_url && (
+          <div className="bg-korean-blue text-white rounded-xl px-5 py-4 text-center min-w-[80px] flex-shrink-0">
+            <div className="text-2xl font-bold">{date.getDate()}</div>
+            <div className="text-xs uppercase tracking-wider">{date.toLocaleDateString('en-US', { month: 'short' })}</div>
+            <div className="text-xs opacity-75">{date.getFullYear()}</div>
+          </div>
+        )}
 
         {/* Content */}
         <div className="flex-1">

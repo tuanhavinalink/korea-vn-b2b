@@ -19,7 +19,7 @@ export default function AdminEventsPage() {
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({
     title: '', description: '', event_date: '', duration_minutes: '60',
-    zoom_link: '', zalo_link: '', is_published: true,
+    zoom_link: '', zalo_link: '', image_url: '', is_published: true,
   })
 
   const load = async () => {
@@ -50,9 +50,10 @@ export default function AdminEventsPage() {
       event_date: new Date(form.event_date).toISOString(),
       duration_minutes: parseInt(form.duration_minutes),
       zoom_link: form.zoom_link || null, zalo_link: form.zalo_link || null,
+      image_url: form.image_url || null,
       is_published: form.is_published,
     })
-    setForm({ title: '', description: '', event_date: '', duration_minutes: '60', zoom_link: '', zalo_link: '', is_published: true })
+    setForm({ title: '', description: '', event_date: '', duration_minutes: '60', zoom_link: '', zalo_link: '', image_url: '', is_published: true })
     setShowForm(false)
     setLoading(false)
     load()
@@ -105,6 +106,10 @@ export default function AdminEventsPage() {
             <div>
               <label className="label">Zalo Group Link</label>
               <input className="input" value={form.zalo_link} onChange={e => setForm({ ...form, zalo_link: e.target.value })} placeholder="https://zalo.me/g/..." />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="label">Event Image URL (e.g. /kasmi1.jpg)</label>
+              <input className="input" value={form.image_url} onChange={e => setForm({ ...form, image_url: e.target.value })} placeholder="/kasmi1.jpg or https://..." />
             </div>
             <div className="sm:col-span-2">
               <label className="label">Description</label>
