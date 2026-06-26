@@ -32,8 +32,8 @@ export default function HeroBanner() {
           {/* Bottom blue bar */}
           <div style={{ height: 3, background: '#0047A0', position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 30 }} />
 
-          {/* Slider */}
-          <div className="relative w-full overflow-hidden" style={{ aspectRatio: '16/5.2', minHeight: 220 }}>
+          {/* Slider — tall on mobile, wide on desktop */}
+          <div className="relative w-full overflow-hidden" style={{ height: 'clamp(180px, 40vw, 520px)' }}>
             {banners.map((src, i) => (
               <Link href="/register" key={i} tabIndex={i === current ? 0 : -1}
                 className={`absolute inset-0 transition-opacity duration-700 ${i === current ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}>
