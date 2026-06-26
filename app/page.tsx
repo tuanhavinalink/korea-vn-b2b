@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic'
 import { createClient } from '@/lib/supabase/server'
 import HomeClient from '@/components/HomeClient'
 import HeroBanner from '@/components/HeroBanner'
+import EventPopup from '@/components/EventPopup'
 import Link from 'next/link'
 import { Calendar, ChevronRight, Star } from 'lucide-react'
 
@@ -43,6 +44,13 @@ export default async function HomePage() {
 
   return (
     <>
+      {/* Event Popup */}
+      <EventPopup
+        eventTitle="Korean Vietnamese SME Zoom Matching 2 – 20h, 23/07/2026"
+        eventImage="/kasmi2.png"
+        eventLink="/events"
+      />
+
       {/* Hero Banner Slider */}
       <HeroBanner />
 
